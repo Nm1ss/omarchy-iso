@@ -86,6 +86,10 @@ boot_vm() {
   exec omarchy-iso-boot /dev/null reuse
 }
 
+clean_up() {
+  rm -f "$TMP_DISK" "$TMP_OVMF"
+}
+
 case "${1:-}" in
   save)
     save_vm "$2"
@@ -96,6 +100,9 @@ case "${1:-}" in
   list)
     list_vms
     ;;
+  clean)
+    clean_up
+    ;;
   *)
     gum style --border rounded --padding "0 1" --border-foreground 212 \
       "$(gum style --bold 'omarchy-vm') - VM snapshot manager" \
@@ -104,6 +111,7 @@ case "${1:-}" in
       "  save [name]  Save current VM from /tmp" \
       "  boot [name]  Boot saved VM (interactive if no name)" \
       "  list         List available VMs" \
+      "  clean        Remove temporary VM files from /tmp" \
       "" \
       "$(gum style --foreground 245 'Current VMs:')"
     list_vms 2>/dev/null || echo "  None"
